@@ -15,15 +15,17 @@ class Request:
 
     def __set_user_agents(self) -> NoReturn:
         self.__User_Agents = User_Agents
+        print("User Agents Setted ")
 
-    def scrap(self, url: str) -> bool:
+    def scrap(self, url: str) -> str:
 
         headers: dict = {"User-Agent": random.choice(self.__User_Agents)}
         response = requests.get(url=url, headers=headers)
 
         if response.status_code == 200:
-            self.__data = response.content.decode('ascii')
-            return True
+            self.__data = response.content.decode('ascii')  # Decoded
+            print("Data Scrapped")
+            return self.__data
 
         elif response.status_code == 429:
             print("To Many Requests")
@@ -32,11 +34,10 @@ class Request:
 
         elif response.status_code == 403:
             print(f"Forbidden  {response.status_code} {url}")
-            return False
+            return None
 
         else:
             print(f"Unknown {response.status_code} {url}")
-            return False
+            return None
 
-    def parse_data(self) -> str:
-        return self.__data
+
