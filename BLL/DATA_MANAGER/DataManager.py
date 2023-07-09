@@ -59,6 +59,8 @@ class DataManager:
 
 
 
+"""
 dates = map(url_mapper, [process for process in map(url_mapper,DateGenerator())])
 for i in dates:
-    print(i)"""
+    print(i)
+"""
