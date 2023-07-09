@@ -1,44 +1,62 @@
 import pandas as pd
 from pandas import DataFrame
+from typing import NoReturn
 
 
 class DataManager:
 
     data: DataFrame
     records: list
-    raw_data: str
+    __raw_data: str
+    __records: list
 
     def __init__(self, raw_data: str):
 
-        self.raw_data = raw_data
+        self.__raw_data = raw_data
 
         self.__convert_data()
         self.__rename_columns()
         self.__edit_data()
+        self.__merge_columns()
         self.__convert_data_to_list()
 
-    def __convert_data(self):
-        pass
+    def __convert_data(self) -> NoReturn:
+        self.data = pd.DataFrame([x.split(';') for x in self.__raw_data.split('\n')])
 
-    def __rename_columns(self):
-        pass
+    def __rename_columns(self) -> NoReturn:
+        column_list_renamed: dict = {'Date': 'date',
+                                     'Period': 'period',
+                                     'CRO': 'cro',
+                                     'CROs': 'cros',
+                                     'CROz': 'croz',
+                                     'Aggregated Market Participants contracting status': 'contract_status',
+                                     'Imbalance': 'imbalance'
+                                     }
+        self.data.rename(columns=column_list_renamed, inplace=True)
 
-    def __edit_data(self):
-        pass
+    def __edit_data(self) -> NoReturn:
+        self.data.date = self.data.date.astype(str)
 
-    def __convert_data_to_list(self):
-        pass
+        self.data.period = self.data.period - 1
+        self.data.period = self.data.period.astype(str)
+        self.data.period = self.data.period + ":00"
 
-    def get_edited_data(self):
-        pass
+        cols_edit = ['cro', 'cros', 'croz', 'contract_status', 'imbalance']
+        for i in cols_edit:
+            self.data[i] = self.data[i].str.replace(",", ".")
+            self.data[i] = self.data[i].astype(float)
+
+    def __merge_columns(self) -> NoReturn:
+        self.data["Date"] = self.data.Date + " " + self.data.Period
+        self.data.drop("Period", axis=1, inplace=True)
+
+    def __convert_data_to_list(self) -> NoReturn:
+        self.__records = self.data.values.tolist()
+
+    def get_edited_data(self) -> list:
+        return self.__records
 
 
-
-"""def url_mapper(b):
-    return "http://abc.com/" + str(b)
-
-def ma(word):
-    return word + "mama"
 
 
 dates = map(url_mapper, [process for process in map(url_mapper,DateGenerator())])
