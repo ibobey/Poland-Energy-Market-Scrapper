@@ -33,11 +33,9 @@ class Request:
             self.scrap(url=url)
 
         elif response.status_code == 403:
-            print(f"Forbidden  {response.status_code} {url}")
-            return None
+            raise Exception(f"Forbidden  {response.status_code} {url}")
 
         else:
-            print(f"Unknown {response.status_code} {url}")
-            return None
+            raise Exception(f"Forbidden  {response.status_code} {url}")
 
 

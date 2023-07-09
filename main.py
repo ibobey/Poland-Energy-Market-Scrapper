@@ -1,6 +1,6 @@
 from BLL.DATE.DateGenerator import *
 from BLL.REQUEST.Request import *
-from BLL.DATA_MANAGER.DataManager import *
+from BLL.DATA_MANAGEMENT.DataManager import *
 from concurrent.futures import ThreadPoolExecutor
 
 
