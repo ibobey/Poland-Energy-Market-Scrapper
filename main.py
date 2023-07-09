@@ -14,8 +14,8 @@ if __name__ == "__main__":
 
     with ThreadPoolExecutor(THREAD) as executor:
         for result in executor.map(scrapper.scrap, [process for process in map(lambda date_: RAW_URL + str(date_), DateGenerator())]):
-            dataManager = DataManager(raw_data=result)
-            edited_data = dataManager.get_edited_data()
-            print(edited_data)
+            edited_data = DataManager(raw_data=result).get_edited_data()
 
 
+
+# DataAccess Layer Need to overcome Database Stuff
