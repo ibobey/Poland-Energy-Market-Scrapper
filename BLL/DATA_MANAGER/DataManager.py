@@ -1,61 +1,37 @@
-from datetime import date,datetime,timedelta
+import pandas as pd
+from pandas import DataFrame
 
 
-class DateGenerator:
+class DataManager:
 
-    # Fields
-    now: datetime
-    __start_date: datetime
-    __end_date: datetime
-    __cursor: datetime
+    data: DataFrame
+    records: list
+    raw_data: str
 
-    # Consts
-    DATE_FORMAT = '%Y%m%d'
+    def __init__(self, raw_data: str):
 
-    # Contractors
+        self.raw_data = raw_data
 
-    def __init__(self, start: int= None, end:int = None):
-        self.__get_current_date()
+        self.__convert_data()
+        self.__rename_columns()
+        self.__edit_data()
+        self.__convert_data_to_list()
 
-        self.start = start
-        self.end = end
+    def __convert_data(self):
+        pass
 
-        self.__set_dates()
+    def __rename_columns(self):
+        pass
 
-    def __iter__(self):
-        return self
+    def __edit_data(self):
+        pass
 
-    def __next__(self):
-        if self.__cursor <= self.__end_date:
-            result = self.__cursor
-            self.__cursor += timedelta(days=1)
-            # return result =>> returns datetime object
-            return result.strftime('%Y%m%d')
-        else:
-            raise StopIteration
+    def __convert_data_to_list(self):
+        pass
 
-    def __repr__(self):
-        return "Generator object"
+    def get_edited_data(self):
+        pass
 
-    # CLass Default Methods
-
-    def __get_current_date(self):
-        now = date.today().strftime(self.DATE_FORMAT)
-        now = datetime.strptime(now, self.DATE_FORMAT)
-        self.now = now
-
-    def __set_dates(self):
-        if self.start is None:
-            self.__start_date = datetime.strptime('20210101', self.DATE_FORMAT)
-        else:
-            self.__start_date = datetime.strptime(str(self.start), self.DATE_FORMAT)
-
-        if self.end is None:
-            self.__end_date = self.now
-        else:
-            self.__end_date = datetime.strptime(str(self.end), self.DATE_FORMAT)
-
-        self.__cursor = self.__start_date
 
 
 """def url_mapper(b):
