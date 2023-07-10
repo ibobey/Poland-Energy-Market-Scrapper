@@ -3,7 +3,7 @@ from typing import Protocol, NoReturn, TypeVar, List
 
 class IManager(Protocol):
 
-    connection: TypeVar
+    __connection: TypeVar
     cursor: TypeVar
 
     def __connect_database(self) -> NoReturn:
