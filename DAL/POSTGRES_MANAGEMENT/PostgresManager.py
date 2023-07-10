@@ -1,10 +1,11 @@
 from DAL.PROTOCOLS.IManager import *
 from DAL.POSTGRES_MANAGEMENT.PACKS.Queries import CREATE_DATABASE,CREATE_TABLE_IF_NOT_EXISTS,SET_DEFAULT_TIMEZONE
+from DAL.POSTGRES_MANAGEMENT.PACKS.Queries import INSERT_INTO
 from os import getenv
 from dotenv import load_dotenv
 import psycopg2
 from psycopg2 import OperationalError
-from psycopg2.errors import UniqueViolation, InFailedSqlTransaction,ActiveSqlTransaction
+from psycopg2.errors import UniqueViolation, InFailedSqlTransaction,ActiveSqlTransaction, InvalidTextRepresentation
 
 
 class PostgresManager(IManager):
@@ -15,9 +16,6 @@ class PostgresManager(IManager):
     __DBNAME: str
     __USER: str
     __PASSWORD: str
-
-    __connection: TypeVar("connection")
-    cursor: TypeVar("cursor")
 
     # Constructors
     def __init__(self):
@@ -106,8 +104,32 @@ class PostgresManager(IManager):
     def query_database(self, query: str) -> bool:
         pass
 
-    def insert_into(self) -> bool:
-        ...
+    def insert_into(self, data: List) -> bool:
+        query = INSERT_INTO
+
+        if data is None or len(data) == 0:
+            return False
+
+        for row in data:
+            try:
+                self.cursor.execute(query,row)
+
+            except UniqueViolation:
+                print("A")
+                self.__connection.rollback()
+                continue
+
+            except InvalidTextRepresentation:
+                self.__connection.rollback()
+                continue
+
+            except InFailedSqlTransaction:
+                self.__connection.rollback()
+                print("B")
+                continue
+
+        self.__connection.commit()
+        return True
 
     def fetch_all(self) -> List:
         ...

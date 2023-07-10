@@ -3,8 +3,12 @@ from typing import Protocol, NoReturn, TypeVar, List
 
 class IManager(Protocol):
 
-    __connection: TypeVar
-    cursor: TypeVar
+    # Fields
+    __HOST: str
+    __PORT: int
+    __DBNAME: str
+    __USER: str
+    __PASSWORD: str
 
     def __connect_database(self) -> NoReturn:
         ...
@@ -27,7 +31,7 @@ class IManager(Protocol):
     def query_database(self, query: str) -> bool:
         ...
 
-    def insert_into(self) -> bool:
+    def insert_into(self,data: list) -> bool:
         ...
 
     def fetch_all(self) -> List:
