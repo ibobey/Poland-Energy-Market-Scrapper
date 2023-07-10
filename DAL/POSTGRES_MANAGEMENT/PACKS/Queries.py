@@ -24,7 +24,11 @@ COMMENT ON TABLE public.market_data
     IS 'Energy Prices on Balancing Market';
 """
 
-INSERT_INTO = ""
+INSERT_INTO = """
+    INSERT INTO 
+    market_data (date,time,cro,cros,croz,contract_status,imbalance)
+    VALUES (%s,%s,%s,%s,%s,%s,%s)
+    """
 
 GET_LAST_RECORD = ""
 
