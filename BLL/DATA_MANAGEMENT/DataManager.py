@@ -18,7 +18,6 @@ class DataManager:
         self.__convert_data()
         self.__rename_columns()
         self.__edit_data()
-        self.__merge_columns()
         self.__convert_data_to_list()
 
     def __convert_data(self) -> NoReturn:
@@ -51,10 +50,6 @@ class DataManager:
         for i in cols_edit:
             self.data[i] = self.data[i].str.replace(",", ".")
             self.data[i] = self.data[i].astype(float)
-
-    def __merge_columns(self) -> NoReturn:
-        self.data["date"] = self.data.date + " " + self.data.period
-        self.data.drop("period", axis=1, inplace=True)
 
     def __convert_data_to_list(self) -> NoReturn:
         self.__records = self.data.values.tolist()

@@ -6,14 +6,15 @@ CREATE_TABLE_IF_NOT_EXISTS = """
 CREATE TABLE IF NOT EXISTS public.market_data
 (
     id serial NOT NULL,
-    date time with time zone,
+    date date,
+    "time" time with time zone,
     cro double precision,
     cros double precision,
     croz double precision,
     contract_status double precision,
     imbalance double precision,
     PRIMARY KEY (id),
-    UNIQUE (date)
+    UNIQUE (date, "time")
 );
 
 ALTER TABLE IF EXISTS public.market_data
