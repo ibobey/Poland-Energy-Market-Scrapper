@@ -1,5 +1,5 @@
 from DAL.PROTOCOLS.IManager import *
-from DAL.POSTGRES_MANAGEMENT.PACKS.Queries import CREATE_DATABASE
+from DAL.POSTGRES_MANAGEMENT.PACKS.Queries import CREATE_DATABASE,CREATE_TABLE_IF_NOT_EXISTS,SET_DEFAULT_TIMEZONE
 from os import getenv
 from dotenv import load_dotenv
 import psycopg2
@@ -25,7 +25,9 @@ class PostgresManager(IManager):
 
     def __enter__(self):
         self.__connect_database()
-        self.__create_database()
+        # self.__create_database()
+        self.__set_default_timezone()
+        self.__create_table_if_not_exists()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -34,6 +36,7 @@ class PostgresManager(IManager):
     def __repr__(self):
         return f"Contex Manager Class {self.__name__}"
 
+    # Database Backend Management Methods
     def __connect_database(self) -> NoReturn:
         try:
             self.__connection = psycopg2.connect(
@@ -82,13 +85,26 @@ class PostgresManager(IManager):
             raise OperationalError(E)
 
     def __create_table_if_not_exists(self) -> bool:
-        ...
+        try:
+            query = CREATE_TABLE_IF_NOT_EXISTS
+            self.cursor.execute(query=query)
+            self.commit()
+            return True
+
+        except Exception as E:
+            print(E)
+
+    def __set_default_timezone(self):
+        query = SET_DEFAULT_TIMEZONE
+        self.cursor.execute(query)
+        self.commit()
+        print("Timezone Updated")
 
     def commit(self) -> NoReturn:
-        ...
+        self.__connection.commit()
 
-    def query_database(self) -> bool:
-        ...
+    def query_database(self, query: str) -> bool:
+        pass
 
     def insert_into(self) -> bool:
         ...
