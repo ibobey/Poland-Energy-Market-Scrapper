@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import psycopg2
 from psycopg2 import OperationalError
 from psycopg2.errors import UniqueViolation, InFailedSqlTransaction,ActiveSqlTransaction, InvalidTextRepresentation
+from psycopg2.errors import InvalidDatetimeFormat
 from datetime import datetime
 
 
@@ -126,10 +127,14 @@ class PostgresManager(IManager):
                 print("B")
                 continue
 
+            except InvalidDatetimeFormat:
+                self.__connection.rollback()
+                continue
+
         self.__connection.commit()
         return True
 
-    def get_last_record(self) -> int :
+    def get_last_record(self) -> int:
         DATE_FORMAT = '%Y-%m-%d'
         query = GET_LAST_RECORD
         try:
@@ -140,7 +145,6 @@ class PostgresManager(IManager):
             return int(date)
 
         except Exception as E:
-            print(E)
             default_date = datetime(year=2021,month=1,day=1).strftime(DATE_FORMAT).replace("-","")
             return int(default_date)
         finally:
