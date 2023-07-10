@@ -129,15 +129,22 @@ class PostgresManager(IManager):
         self.__connection.commit()
         return True
 
-    def get_last_record(self) -> datetime:
+    def get_last_record(self) -> int :
+        DATE_FORMAT = '%Y-%m-%d'
         query = GET_LAST_RECORD
         try:
+            self.__connect_database()
             self.cursor.execute(query)
             date = self.cursor.fetchone()[1]
-            return date
+            date = date.strftime(DATE_FORMAT).replace("-","")
+            return int(date)
 
-        except Exception:
-            return datetime(year=2021,month=1,day=1)
+        except Exception as E:
+            print(E)
+            default_date = datetime(year=2021,month=1,day=1).strftime(DATE_FORMAT).replace("-","")
+            return int(default_date)
+        finally:
+            self.__close_database_connection()
 
     def fetch_all(self) -> List:
         return self.cursor.fetchall()
