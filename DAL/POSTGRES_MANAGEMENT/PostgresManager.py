@@ -1,11 +1,12 @@
 from DAL.PROTOCOLS.IManager import *
 from DAL.POSTGRES_MANAGEMENT.PACKS.Queries import CREATE_DATABASE,CREATE_TABLE_IF_NOT_EXISTS,SET_DEFAULT_TIMEZONE
-from DAL.POSTGRES_MANAGEMENT.PACKS.Queries import INSERT_INTO
+from DAL.POSTGRES_MANAGEMENT.PACKS.Queries import INSERT_INTO,GET_LAST_RECORD
 from os import getenv
 from dotenv import load_dotenv
 import psycopg2
 from psycopg2 import OperationalError
 from psycopg2.errors import UniqueViolation, InFailedSqlTransaction,ActiveSqlTransaction, InvalidTextRepresentation
+from datetime import datetime
 
 
 class PostgresManager(IManager):
@@ -101,9 +102,6 @@ class PostgresManager(IManager):
     def commit(self) -> NoReturn:
         self.__connection.commit()
 
-    def query_database(self, query: str) -> bool:
-        pass
-
     def insert_into(self, data: List) -> bool:
         query = INSERT_INTO
 
@@ -131,7 +129,17 @@ class PostgresManager(IManager):
         self.__connection.commit()
         return True
 
+    def get_last_record(self) -> datetime:
+        query = GET_LAST_RECORD
+        try:
+            self.cursor.execute(query)
+            date = self.cursor.fetchone()[1]
+            return date
+
+        except Exception:
+            return datetime(year=2021,month=1,day=1)
+
     def fetch_all(self) -> List:
-        ...
+        return self.cursor.fetchall()
 
 

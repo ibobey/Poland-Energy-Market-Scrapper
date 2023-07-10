@@ -28,9 +28,6 @@ class IManager(Protocol):
     def commit(self) -> NoReturn:
         ...
 
-    def query_database(self, query: str) -> bool:
-        ...
-
     def insert_into(self,data: list) -> bool:
         ...
 

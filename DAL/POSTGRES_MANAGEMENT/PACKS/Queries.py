@@ -30,7 +30,7 @@ INSERT_INTO = """
     VALUES (%s,%s,%s,%s,%s,%s,%s)
     """
 
-GET_LAST_RECORD = ""
+GET_LAST_RECORD = "SELECT * FROM market_data ORDER BY date DESC LIMIT 1"
 
 CREATE_DATABASE = """
     CREATE DATABASE poland_market_data

@@ -3,9 +3,5 @@ import datetime
 
 with PostgresManager() as pgm:
 
-    data = [
-
-        ['20190714','11:00',444,555,666,777,888],
-        ['20190715','12:00',444,555,666,777,888]]
-
-    pgm.insert_into(data=data)
+    date = pgm.get_last_record()
+    print(date)
